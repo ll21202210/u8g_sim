@@ -14,7 +14,9 @@
         "begin_code.h": "c",
         "sdl_thread.h": "c",
         "sdl_sensor.h": "c",
-        "sdl_joystick.h": "c"
+        "sdl_joystick.h": "c",
+        "menu.h": "c",
+        "math.h": "c"
     },
     "C_Cpp.default.includePath": ["u8g2/", "sdl2/"]
 }

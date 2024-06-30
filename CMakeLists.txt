@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 
 file(GLOB_RECURSE INCLUDES "u8g2/*.h" )
-file(GLOB_RECURSE SOURCES  "u8g2/*.c"  "main.c" )
+file(GLOB_RECURSE SOURCES  "u8g2/*.c"  "main.c" "Menu/*.c")
 
-include_directories("u8g2/" "sdl/i686-w64-mingw32/include/SDL2/")
+include_directories("u8g2/" "sdl/i686-w64-mingw32/include/SDL2/" "Menu/")
 
 add_compile_definitions("unix")
 

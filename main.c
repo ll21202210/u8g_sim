@@ -3,7 +3,7 @@
 #include "u8g2.h"
 #include "SDL_timer.h"
 // #include    "sdl/i686-w64-mingw32/include/SDL2/sdl.h"
-int __cdecl __MINGW_NOTHROW usleep(useconds_t);
+extern int usleep();
 
 #include "Menu.h"
 
@@ -44,8 +44,12 @@ int main()
         //     Menu_NextOption();
         // }
         
-        k = u8g_sdl_get_key(); // 在英文状态下才能获取到按键值
-        switch(k){
+        
+        if(SDL_GetTicks64() - tick >= 20)
+        {
+            tick = SDL_GetTicks64();
+            k = u8g_sdl_get_key(); // 在英文状态下才能获取到按键值
+            switch(k){
             case 'q':
                 break;
             case 'a':
@@ -62,10 +66,13 @@ int main()
                 break;
             default:
                 break;
+            }
+            if (k == 'q')
+                break;
         }
-        if (k == 'q')
-            break;
-        usleep(1000);
+        
+        
+        usleep(2000);
     }
     return 0;
 }

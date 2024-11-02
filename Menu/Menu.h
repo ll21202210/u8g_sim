@@ -5,7 +5,7 @@
 #include "u8g2.h"
 
 //  帧率设置
-#define MENU_FRATE  30
+#define MENU_FRATE  50
 
 
 
@@ -15,7 +15,7 @@ typedef void(*Menu_func_t)();
 typedef struct 
 {
     uint8_t Menu_id;
-    uint8_t Menu_Type; // 0 列表模式   1 执行函数绘制界面
+    uint8_t Menu_Type; // 0 列表模式 1 图标横向  2 执行函数绘制界面
     uint8_t Menu_Listid;
     uint8_t Click_Action;   // 0 无 1 跳转菜单 2 执行函数 
     uint8_t Preview_Menuid;

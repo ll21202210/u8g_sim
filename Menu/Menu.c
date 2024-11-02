@@ -15,32 +15,39 @@ void Menu_Animation_Calc();
 
 void Func();
 
-
+// 菜单树
 #define Menu_Count      (sizeof(Menu) / sizeof(Menu[0]))
 const Menu_t Menu[] = { 
 // id typ lid act pre name func  para1
-    {0, 0, 0, 1, 0, "wqy_chinese_14", NULL, 1},
-    {0, 0, 1, 2, 0, "opt2", Func, 0},
+    {0, 0, 0, 1, 0, "jump1", NULL, 1},
+    {0, 0, 1, 2, 0, "func_test", Func, 0},
     {0, 0, 2, 1, 0, "op22t3", NULL, 2},
     {0, 0, 3, 0, 0, "opt14", NULL, 0},
     {0, 0, 4, 0, 0, "opt225", NULL, 0},
     {0, 0, 5, 0, 0, "opt6", NULL, 0},
     {0, 0, 6, 0, 0, "o21pt7", NULL, 0},
     {0, 0, 7, 1, 0, "opt8", NULL, 1},
-    {0, 0, 8, 0, 0, "op2t9", NULL, 0},
-    {1, 0, 0, 0, 0, "1110", NULL, 0},
-    {1, 0, 1, 0, 0, "111", NULL, 0},
-    {1, 0, 2, 1, 0, "opt12", NULL, 0},
+    {0, 0, 8, 1, 0, "op2t9", NULL, 3},
+    {1, 0, 0, 1, 0, "文泉驿", NULL, 0},
+    {1, 0, 1, 1, 0, "jump2", NULL, 2},
+    {1, 0, 2, 1, 0, "jump0", NULL, 0},
     {1, 0, 3, 0, 0, "opt13", NULL, 0},
-    {2, 0, 0, 0, 0, "op22t20", NULL, 0},
+    {1, 0, 4, 0, 0, "opt13", NULL, 0},
+    {2, 0, 0, 0, 1, "op22t20", NULL, 0},
     {2, 0, 1, 0, 0, "opt21", NULL, 0},
-    {2, 0, 2, 1, 0, "opt22", NULL, 0},
+    {2, 0, 2, 1, 0, "jump3", NULL, 3},
+    {3, 1, 0, 1, 2, "m1j0", NULL, 0},
+    {3, 1, 1, 1, 1, "m31j0", NULL, 0},
+    {3, 1, 2, 1, 1, "m3j0", NULL, 0},
+    {3, 1, 3, 1, 1, "m10", NULL, 0},
+    {3, 1, 4, 1, 1, "m10", NULL, 0},
     
 
 };
 Menu_Sta_t Menu_Sta;
 /**
-    pos current target  speed;
+    pos current last  speed  adden
+    位置偏移  当前位置  目标位置  速度  允许误差累加
  */
 #define Menu_AnimationCount      (sizeof(Menu_Animation) / sizeof(Menu_Animation[0]))
 Menu_Animation_t Menu_Animation[2] = {
@@ -79,23 +86,47 @@ void Menu_Draw(u8g2_t *u8g2)
         pos = Menu_Sta.List_Firstpos;
         offset = Menu_Sta.List_Offset;
         u8g2_ClearBuffer(u8g2);
-        u8g2_SetFont(u8g2, u8g2_font_wqy14_t_gb2312);
-        u8g2_SetDrawColor(u8g2, 1);
-        for(i = -1; i < 5; i++)
-        {
-            if((pos + i + Menu_Sta.List_Offset) >= Menu_Sta.List_Firstpos && (pos + i + Menu_Sta.List_Offset) <= (Menu_Sta.List_Firstpos + Menu_Sta.List_Count))
-            {
-                u8g2_DrawUTF8(u8g2, 10,1 + i*16 + 12 + 16 * Menu_Animation[1].pos, Menu[pos + i + Menu_Sta.List_Offset].ItemName);
-            }
-            
+        u8g2_SetFont(u8g2, u8g2_font_wqy12_t_gb2312);
+        
+
+        switch(Menu[pos].Menu_Type){
+            case 0: // 列表绘制
+                u8g2_SetDrawColor(u8g2, 1);
+                for(i = -1; i < 5; i++)
+                {
+                    if((pos + i + Menu_Sta.List_Offset) >= Menu_Sta.List_Firstpos && (pos + i + Menu_Sta.List_Offset) <= (Menu_Sta.List_Firstpos + Menu_Sta.List_Count))
+                    {
+                        u8g2_DrawUTF8(u8g2, 10, i*16 + 12 + 16 * Menu_Animation[1].pos, Menu[pos + i + Menu_Sta.List_Offset].ItemName);
+                    }
+                    
+                }
+                u8g2_SetDrawColor(u8g2, 2);
+                u8g2_DrawRBox(u8g2, 4,\
+                1 + (Menu_Sta.List_Select - Menu_Sta.List_Offset) * 16 - 16 * Menu_Animation[0].pos, \
+                110, 14, 0);
+
+                
+                break;
+            case 1:  //横向列表绘制
+                for(i = -1; i < 5; i++)
+                {
+                    if((pos + i + Menu_Sta.List_Offset) >= Menu_Sta.List_Firstpos && (pos + i + Menu_Sta.List_Offset) <= (Menu_Sta.List_Firstpos + Menu_Sta.List_Count))
+                    {
+                        u8g2_DrawUTF8(u8g2, i*32 + 2+  32 * Menu_Animation[1].pos, 40, Menu[pos + i + Menu_Sta.List_Offset].ItemName);
+                    }
+                }
+                u8g2_SetDrawColor(u8g2, 2);
+                u8g2_DrawRBox(u8g2, \
+                1 + (Menu_Sta.List_Select - Menu_Sta.List_Offset) * 32 - 32 * Menu_Animation[0].pos, \
+                36,
+                10, 14, 0);
+                break;
+            case 2:
+                break;
+            default:
+                break;
         }
-        u8g2_SetDrawColor(u8g2, 2);
-        u8g2_DrawRBox(u8g2, 4,\
-         1 + (Menu_Sta.List_Select - Menu_Sta.List_Offset) * 16 - 16 * Menu_Animation[0].pos, \
-          110, 14, 0);
-
         u8g2_SendBuffer(u8g2);
-
     }
 }
 
